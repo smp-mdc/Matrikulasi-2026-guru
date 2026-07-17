@@ -883,10 +883,32 @@ function buildCharacterReportPage(item){
   const answered = numberOrZero(item.karakter_answered_count);
   const total = numberOrZero(item.karakter_question_count);
 
+  // Highlight kotak berdasarkan kategori dari backend, bukan nilai 0–100.
+  // "value" adalah skor interpretasi (misalnya 78,33), sedangkan label rentang
+  // 40–48 / 28–39 / <28 menggunakan skala mentah lama.
+  const normalizedCategory = String(category)
+    .trim()
+    .toLowerCase()
+    .replace(/[–—]/g, "-");
+
   const ranges = [
-    {label:"Sangat Kuat — Agent of Change",range:"40–48",active:value>=40},
-    {label:"Berkembang Baik",range:"28–39",active:value>=28 && value<40},
-    {label:"Perlu Pendampingan",range:"< 28",active:value<28}
+    {
+      label: "Sangat Kuat — Agent of Change",
+      range: "40–48",
+      active:
+        normalizedCategory.includes("sangat kuat") ||
+        normalizedCategory.includes("agent of change")
+    },
+    {
+      label: "Berkembang Baik",
+      range: "28–39",
+      active: normalizedCategory.includes("berkembang baik")
+    },
+    {
+      label: "Perlu Pendampingan",
+      range: "< 28",
+      active: normalizedCategory.includes("perlu pendampingan")
+    }
   ];
 
   return `
