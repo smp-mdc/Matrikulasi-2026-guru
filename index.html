@@ -479,11 +479,11 @@ window.MathJax = {
     <div class="report-header-row">
       <div>
         <h2 style="margin:0 0 6px">Laporan Hasil Matrikulasi</h2>
-        <p class="small" style="margin:0">Pilih peserta, periksa hasil Numerasi dan Literasi, lalu cetak menjadi PDF 2 halaman A4.</p>
+        <p class="small" style="margin:0">Pilih peserta, periksa hasil Numerasi, Literasi, dan Karakter, lalu cetak menjadi PDF 3 halaman A4.</p>
       </div>
       <div class="report-actions">
         <button class="btn-secondary" onclick="loadReport(true)">Refresh Report</button>
-        <button class="btn-start" onclick="printSelectedReport()">Cetak PDF 2 Halaman A4</button>
+        <button class="btn-start" onclick="printSelectedReport()">Cetak PDF 3 Halaman A4</button>
       </div>
     </div>
 
@@ -838,13 +838,13 @@ function buildAcademicReportPage(item,testType){
       </tr>`;
   }).join("");
 
-  const note = value >= 90
-    ? "Siswa menunjukkan kesiapan yang sangat baik pada materi yang diujikan. Pembelajaran dapat dilanjutkan dengan kegiatan pengayaan dan tantangan yang lebih kompleks."
-    : value >= 80
-      ? "Siswa cukup siap mengikuti pembelajaran. Guru disarankan tetap memberikan penguatan pada materi yang levelnya masih rendah."
-      : value >= 75
-        ? "Siswa memerlukan penguatan pada beberapa kompetensi dasar sebelum memasuki materi lanjutan."
-        : "Siswa memerlukan pendampingan terstruktur. Prioritaskan materi dengan level 1–2 sebagai dasar program matrikulasi lanjutan.";
+  const note = value >= 91
+  ? "Siswa telah menunjukkan kesiapan belajar yang sangat baik. Pertahankan kebiasaan belajar yang konsisten dan terus kembangkan kemampuan melalui latihan yang lebih menantang serta penerapan konsep pada berbagai situasi."
+  : value >= 81
+    ? "Siswa telah memiliki bekal yang baik untuk mengikuti pembelajaran. Teruslah memperkuat pemahaman dengan belajar secara rutin, mengulas kembali materi yang telah dipelajari, dan memperbanyak latihan agar hasil belajar semakin optimal."
+    : value >= 75
+      ? "Siswa telah memiliki dasar yang cukup untuk mengikuti pembelajaran. Luangkan waktu untuk mengulang materi yang belum dipahami sepenuhnya, berlatih secara teratur, dan aktif mencari pemahaman ketika menemui kesulitan agar kesiapan belajar semakin meningkat."
+      : "Siswa perlu memantapkan kembali pemahaman pada materi prasyarat sebelum mempelajari materi berikutnya. Fokuslah pada penguasaan konsep dasar, berlatih secara bertahap dan konsisten, serta manfaatkan berbagai sumber belajar agar kesiapan belajar semakin baik.";
 
   return `
     ${buildDocHeader(title)}
@@ -871,7 +871,7 @@ function buildAcademicReportPage(item,testType){
     </table>
 
     <div class="report-note"><b>Rekomendasi tindak lanjut:</b> ${esc(note)}</div>
-    <div class="report-footer"><span>MDC Matriculation System</span><span>${testType === "NUMERASI" ? "Halaman 1 dari 2" : "Halaman 2 dari 2"}</span></div>`;
+    <div class="report-footer"><span>MDC Matriculation System</span><span>${testType === "NUMERASI" ? "Halaman 1 dari 3" : "Halaman 2 dari 3"}</span></div>`;
 }
 
 function buildCharacterReportPage(item){
@@ -892,24 +892,26 @@ function buildCharacterReportPage(item){
     .replace(/[–—]/g, "-");
 
   const ranges = [
-    {
-      label: "Sangat Kuat — Agent of Change",
-      range: "40–48",
-      active:
-        normalizedCategory.includes("sangat kuat") ||
-        normalizedCategory.includes("agent of change")
-    },
-    {
-      label: "Berkembang Baik",
-      range: "28–39",
-      active: normalizedCategory.includes("berkembang baik")
-    },
-    {
-      label: "Perlu Pendampingan",
-      range: "< 28",
-      active: normalizedCategory.includes("perlu pendampingan")
-    }
-  ];
+  {
+    label: "Sangat Kuat – Agent of Change",
+    range: "40–48",
+    active:
+      normalizedCategory.includes("sangat kuat") ||
+      normalizedCategory.includes("agent of change")
+  },
+  {
+    label: "Berkembang Baik",
+    range: "28–39",
+    active:
+      normalizedCategory.includes("berkembang baik")
+  },
+  {
+    label: "Terus Bertumbuh",
+    range: "< 28",
+    active:
+      normalizedCategory.includes("terus bertumbuh")
+  }
+];
 
   return `
     ${buildDocHeader("LAPORAN DIAGNOSTIK KARAKTER")}
@@ -952,9 +954,10 @@ function printSelectedReport(){
   // Sesuai keputusan terbaru: PDF hanya memuat Numerasi dan Literasi.
   // Hasil Karakter tetap tersimpan dan dapat dilihat guru di portal.
   const pages = [
-    document.getElementById("reportPageNumerasi"),
-    document.getElementById("reportPageLiterasi")
-  ];
+  document.getElementById("reportPageNumerasi"),
+  document.getElementById("reportPageLiterasi"),
+  document.getElementById("reportPageKarakter")
+];
 
   if(pages.some(page => !page || !page.innerHTML.trim())){
     showReportMessage("Data report belum selesai dimuat. Klik Refresh Report lalu coba lagi.", false);
@@ -979,7 +982,7 @@ function printSelectedReport(){
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Laporan Hasil Matrikulasi - Numerasi dan Literasi</title>
+<title>Laporan Hasil Matrikulasi - Numerasi, Literasi, dan Karakter</title>
 <style>
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:#fff;color:#10243e;font-family:Arial,Helvetica,sans-serif}
