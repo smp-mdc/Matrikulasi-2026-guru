@@ -1343,7 +1343,7 @@ function renderAnswerPrintWindow(printWindow, data) {
     page-break-before:always;
   }
 
-  .test-section:first-of-type{
+  .student-info + .test-section{
     page-break-before:auto;
   }
 
@@ -1488,7 +1488,7 @@ function renderAnswerPrintWindow(printWindow, data) {
     }
 
     .test-section{page-break-before:always}
-    .test-section:first-of-type{page-break-before:auto}
+    .student-info + .test-section{page-break-before:auto}
 
     *{
       print-color-adjust:exact;
